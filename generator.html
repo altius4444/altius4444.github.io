@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Generator</title>
+</head>
+<body>
+    <h1>Password Generator</h1>
+    <label for="website">Enter name of website:</label>
+    <input type="text" id="website"><br><br>
+
+    <label for="key">Enter key:</label>
+    <input type="text" id="key"><br><br>
+
+    <button id="generate">Generate Password</button>
+    <h2 id="result"></h2>
+
+    <script>
+        document.getElementById('generate').addEventListener('click', function() {
+            const website = document.getElementById('website').value;
+            const key = document.getElementById('key').value;
+
+            // Base64 encode
+            const encodedSite = btoa(website);
+            const encodedKey = btoa(key);
+            const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+
+            // Equalize lengths
+            let site = encodedSite.padEnd(encodedKey.length, 'A');
+            let k = encodedKey.padEnd(encodedSite.length, 'A');
+
+            let cipherText = '';
+
+            // Generate cipher text
+            for (let i = 0; i < site.length; i++) {
+                const siteCharIndex = alphabet.indexOf(site.charAt(i));
+                const keyCharIndex = alphabet.indexOf(k.charAt(i));
+                const cipherCharIndex = (siteCharIndex + keyCharIndex) % 64; // Use 64 for wrap-around
+                cipherText += alphabet.charAt(cipherCharIndex);
+            }
+
+            // Display result
+            document.getElementById('result').innerText = "Result is: " + cipherText;
+        });
+    </script>
+</body>
+</html>
